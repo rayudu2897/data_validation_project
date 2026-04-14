@@ -1,8 +1,19 @@
 import pandas as pd
+import sqlite3
+
 
 # Load data
 legacy = pd.read_csv("legacy_data.csv")
 new = pd.read_csv("new_data.csv")
+
+# Create SQLite database
+conn = sqlite3.connect("insurance.db")
+
+# Load CSV into SQL tables
+legacy.to_sql("legacy_table", conn, if_exists="replace", index=False)
+new.to_sql("new_table", conn, if_exists="replace", index=False)
+
+print("\nData loaded into SQLite database")
 
 print("=== Data Loaded ===")
 
@@ -13,6 +24,19 @@ print("New:", len(new))
 
 # 2. Merge datasets
 merged = legacy.merge(new, on="policy_id", how="outer", suffixes=('_old', '_new'))
+
+# SQL: Find mismatches
+query = """
+SELECT l.policy_id, l.premium AS old_premium, n.premium AS new_premium
+FROM legacy_table l
+JOIN new_table n ON l.policy_id = n.policy_id
+WHERE l.premium != n.premium
+"""
+
+sql_mismatch = pd.read_sql(query, conn)
+
+print("\nSQL Mismatch Results:")
+print(sql_mismatch)
 
 # 3. Find premium mismatches
 mismatch = merged[
