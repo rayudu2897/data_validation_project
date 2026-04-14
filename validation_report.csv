@@ -1,0 +1,4 @@
+policy_id,customer_name_old,premium_old,status_old,customer_name_new,premium_new,status_new
+102,Alice,600.0,Active,Alice,650.0,Active
+105,Emma,900.0,Active,,,
+106,,,,Lisa,1000.0,Active

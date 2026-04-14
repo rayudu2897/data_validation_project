@@ -1,0 +1,6 @@
+policy_id,customer_name,premium,status
+101,John,500,Active
+102,Alice,600,Active
+103,Bob,700,Inactive
+104,David,800,Active
+105,Emma,900,Active
